@@ -118,6 +118,16 @@ class RunCMakeBuilder {
   Future<Uri> iosToolchainCmake() async => (await currentPackageRoot()).resolve('cmake/ios.toolchain.cmake');
 
   Future<Uri> androidToolchainCmake({Map<String, String>? environment}) async {
+    if (input.config.code.cCompiler?.compiler case final compilerUri?) {
+      return compilerUri.replace(
+        pathSegments: [
+          ...compilerUri.pathSegments.take(compilerUri.pathSegments.length - 6),
+          'build',
+          'cmake',
+          'android.toolchain.cmake',
+        ],
+      );
+    }
     final tool = await androidNdk.defaultResolver?.resolve(
       logger: logger,
       userConfig: userConfig,
