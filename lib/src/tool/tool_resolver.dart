@@ -258,6 +258,9 @@ class InstallLocationResolver implements ToolResolver {
         pathNew = path.replaceAll('$home/', homeDir!.toFilePath().replaceAll(r'\', '/'));
       }
     }
+    if (OS.current == OS.windows) {
+      pathNew = pathNew.replaceAll(r'\', '/');
+    }
 
     final result = <Uri>[];
     final fileSystemEntities = await Glob(pathNew).list().toList();
