@@ -71,6 +71,8 @@ class RunCMakeBuilder {
   final int? parallelJobs;
   final bool parallelUseAllProcessors;
 
+  final CCompilerConfig? cCompiler;
+
   RunCMakeBuilder({
     required this.sourceDir,
     required this.outDir,
@@ -96,7 +98,8 @@ class RunCMakeBuilder {
   }) : targetOS = targetOS ?? codeConfig?.targetOS ?? OS.current,
        targetArchitecture = targetArchitecture ?? codeConfig?.targetArchitecture ?? Architecture.current,
        userConfig = userConfig ?? UserConfig(targetOS: targetOS ?? codeConfig?.targetOS ?? OS.current),
-       parallelJobs = parallelJobs ?? (parallelUseAllProcessors ? Platform.numberOfProcessors : null);
+       parallelJobs = parallelJobs ?? (parallelUseAllProcessors ? Platform.numberOfProcessors : null),
+       cCompiler = codeConfig?.cCompiler;
 
   Future<Uri> cmakePath({Map<String, String>? environment}) async {
     final cmakeTools = await cmake.defaultResolver?.resolve(
@@ -125,7 +128,7 @@ class RunCMakeBuilder {
   Future<Uri> iosToolchainCmake() async => (await currentPackageRoot()).resolve('cmake/ios.toolchain.cmake');
 
   Future<Uri> androidToolchainCmake({Map<String, String>? environment}) async {
-    if (input.config.code.cCompiler?.compiler case final compilerUri?) {
+    if (cCompiler?.compiler case final compilerUri?) {
       return compilerUri.replace(
         pathSegments: [
           ...compilerUri.pathSegments.take(compilerUri.pathSegments.length - 6),

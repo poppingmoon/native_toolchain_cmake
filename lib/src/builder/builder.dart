@@ -367,6 +367,7 @@ class CMakeBuilder implements Builder {
       androidArgs: androidArgs,
       logLevel: logLevel,
       userConfig: userConfig,
+      codeConfig: input?.config.code,
       parallelJobs: parallelJobs,
       parallelUseAllProcessors: parallelUseAllProcessors,
     );
